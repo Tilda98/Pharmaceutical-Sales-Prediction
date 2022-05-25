@@ -1,0 +1,22 @@
+name: pharmaceutical-prediction-model
+on: [push]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: iterative/setup-cml@v1
+      - name: Train mode
+        run: |
+          pip install -r requirements.txt
+          python cleaning.py
+          
+          echo "## Model Metrics"
+          cat metrics.txt >> report.md
+          
+          echo "Cleaned Data Visualization" >> report.md
+          cml publish plot.png --md >> report.md
+          
+          
+          cml send-comment report.md
